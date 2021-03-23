@@ -91,7 +91,7 @@ jobs:
       - run: |
           tar -xzvf app.tar.gz -C . && \
           rm app.tar.gz
-          git init & \
+          git init && \
           git add . && \
           git commit -m "First commit"
       - uses: ngduc/vercel-deploy-action@master
