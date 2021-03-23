@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - integration
+      - dev
+
+jobs:
+  integration:
+    name: Build Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+      - name: Get Pack
+        run: |
+          (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.17.0/pack-v0.17.0-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack)
+      - name: Integration test
+        id: int-test
+        env:
+          ECR_REGISTRY: ghcr.io/laraboot-io
+        run: |
+          pack config default-builder paketobuildpacks/builder:full
+
+          # Create a new laravel project here
+          composer create-project laravel/laravel laravel-base
+
+          pushd laravel-base
+
+          # Copy necessary file
+          cp -a ../vercel-assets/. ./
+          cp ../laraboot.json .
+          ls -ltah
+
+          # until https://github.com/paketo-buildpacks/php-dist/issues/201 is fixed
+          readonly php_version=$(php -v | grep ^PHP | cut -d' ' -f2)
+
+          readonly php_round_version=$(printf -v T "%.2f" "$php_version")
+
+          echo "php_version=$php_version"
+          echo "php_round_version=$php_round_version"
+
+          cat composer.json | jq -r ".require.php=\"7.4.*\"" > composer.tmp && \
+          mv composer.tmp composer.json && \
+          rm composer.lock && \
+          composer update
+
+          pack build test-app --path . \
+          --buildpack paketo-buildpacks/php-dist \
+          --buildpack paketo-buildpacks/php-composer \
+          --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laravel-foundation-provider:dev \
+          --buildpack gcr.io/paketo-buildpacks/node-engine \
+          --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laravel-models:dev \
+          --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laraboot-packer:dev \
+          --buildpack gcr.io/paketo-buildpacks/npm \
+          --builder paketobuildpacks/builder:full \
+          --clear-cache --verbose
+
+          popd
+
+          image_id=$(docker run -id test-app)
+          docker cp $image_id:/layers/laraboot-buildpacks_laraboot-packer/laraboot/app.tar.gz app.tar.gz
+          ls -ltah app.tar.gz
+
+      - uses: ngduc/vercel-deploy-action@master
+        with:
+          vercel-cli: vercel
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
+          github-token: ${{ secrets.GITHUB_TOKEN }} #Optional
+          vercel-args: '--dev' #Optional
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}  #Required
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}} #Required
+          working-directory: ./
+
