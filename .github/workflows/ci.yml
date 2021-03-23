@@ -89,8 +89,8 @@ jobs:
         with:
           name: app
       - run: |
-          tar -xzvf app.tar.gz -C .
-          ls -ltah
+          tar -xzvf app.tar.gz -C . && \
+          rm app.tar.gz
       - uses: ngduc/vercel-deploy-action@master
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
@@ -104,5 +104,5 @@ jobs:
           vercel-args: '' #Optional
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}  #Required
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}} #Required
-          working-directory: ./laravel-base
+          working-directory: ./
 
