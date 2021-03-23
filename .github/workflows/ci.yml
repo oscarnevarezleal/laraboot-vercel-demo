@@ -86,5 +86,5 @@ jobs:
           vercel-args: '' #Optional
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}  #Required
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}} #Required
-          working-directory: ./
+          working-directory: ./laravel-base
 
