@@ -39,8 +39,8 @@ jobs:
           pushd laravel-base
 
           # Copy necessary file
-          cp -a ../vercel-assets/. ./
-          cp ../laraboot.json .
+          cp -a ../src/vercel-files/. ./
+          cp ../src/laraboot.json .
           ls -ltah
 
           # until https://github.com/paketo-buildpacks/php-dist/issues/201 is fixed
