@@ -91,6 +91,7 @@ jobs:
       - run: |
           tar -xzvf app.tar.gz -C . && \
           rm app.tar.gz
+          git init
       - uses: ngduc/vercel-deploy-action@master
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
