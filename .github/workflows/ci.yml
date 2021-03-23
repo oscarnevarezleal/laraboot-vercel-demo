@@ -73,6 +73,24 @@ jobs:
           docker cp $image_id:/layers/laraboot-buildpacks_laraboot-packer/laraboot/app.tar.gz app.tar.gz
           ls -ltah app.tar.gz
 
+      - name: Upload buildpacks
+        uses: actions/upload-artifact@v2
+        with:
+          name: app
+          path: app.tar.gz
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: integration
+    steps:
+      - name: Download buildpacks
+        uses: actions/download-artifact@v2
+        with:
+          name: app
+      - run: |
+          tar -xzvf app.tar.gz -C .
+          ls -ltah
       - uses: ngduc/vercel-deploy-action@master
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
