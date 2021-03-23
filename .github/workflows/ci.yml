@@ -94,7 +94,7 @@ jobs:
           php-version: '7.4'
       - run: |
           tar -xzvf app.tar.gz -C . && \
-          composer update && \
+          composer install && \
           rm app.tar.gz
 
           git config --global user.email "you@example.com"
