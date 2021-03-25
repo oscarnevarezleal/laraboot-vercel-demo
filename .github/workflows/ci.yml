@@ -56,9 +56,6 @@ jobs:
           rm composer.lock && \
           composer update
 
-          touch database/database.sqlite
-          DB_CONNECTION=sqlite DB_DATABASE=`pwd`/database/database.sqlite php artisan migrate
-
           pack build test-app --path . \
           --buildpack paketo-buildpacks/php-dist \
           --buildpack paketo-buildpacks/php-composer \
@@ -109,6 +106,9 @@ jobs:
 
           rm -rf ./vendor
           composer install
+
+          touch database/database.sqlite
+          DB_CONNECTION=sqlite DB_DATABASE=`pwd`/database/database.sqlite php artisan migrate
 
       - uses: ngduc/vercel-deploy-action@master
         env:
