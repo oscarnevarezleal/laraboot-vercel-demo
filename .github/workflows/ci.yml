@@ -108,7 +108,7 @@ jobs:
           composer install
 
           touch database/database.sqlite
-          DB_CONNECTION=sqlite DB_DATABASE=`pwd`/database/database.sqlite php artisan migrate
+          DB_CONNECTION=sqlite DB_DATABASE=`pwd`/database/database.sqlite php artisan migrate:refresh --seed
 
       - uses: ngduc/vercel-deploy-action@master
         env:
