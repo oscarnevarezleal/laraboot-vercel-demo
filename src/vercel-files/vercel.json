@@ -20,7 +20,7 @@
     "VIEW_COMPILED_PATH": "/tmp",
 
     "DB_CONNECTION": "sqlite",
-    "DB_DATABASE": "database/database.sqlite",
+    "DB_DATABASE": "/var/task/user/database/database.sqlite",
     "CACHE_DRIVER": "array",
     "LOG_CHANNEL": "stderr",
     "SESSION_DRIVER": "cookie"
