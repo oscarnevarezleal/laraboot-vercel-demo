@@ -57,6 +57,7 @@ jobs:
           composer update
 
           touch database/database.sqlite
+          DB_CONNECTION=sqlite DB_DATABASE=`pwd`/database/database.sqlite php artisan migrate
 
           pack build test-app --path . \
           --buildpack paketo-buildpacks/php-dist \
