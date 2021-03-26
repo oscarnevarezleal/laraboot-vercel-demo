@@ -120,7 +120,8 @@ jobs:
           git add . && \
           git commit -m "Migration"
 
-      - uses: ngduc/vercel-deploy-action@master
+      - name: Preview release
+        uses: ngduc/vercel-deploy-action@master
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
