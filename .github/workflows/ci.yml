@@ -3,8 +3,9 @@ name: CI
 on:
   push:
     branches:
-      - integration
+      - main
       - dev
+      - integration
 
 jobs:
   integration:
@@ -85,6 +86,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: integration
     steps:
+      - name: Extract Branch Name
+        run: echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
       - name: Download buildpacks
         uses: actions/download-artifact@v2
         with:
@@ -128,6 +131,22 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
           github-token: ${{ secrets.GITHUB_TOKEN }} #Optional
           vercel-args: '' #Optional
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}  #Required
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}} #Required
+          working-directory: ./
+      - name: Release into production
+        if: ${{ github.event_name == 'release' }}
+        uses: ngduc/vercel-deploy-action@master
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        with:
+          vercel-cli: vercel
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
+          github-token: ${{ secrets.GITHUB_TOKEN }} #Optional
+          vercel-args: '--prod' #Optional
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}  #Required
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}} #Required
           working-directory: ./
