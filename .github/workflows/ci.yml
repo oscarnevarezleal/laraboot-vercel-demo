@@ -96,7 +96,6 @@ jobs:
       - run: |
           tar -xzvf app.tar.gz -C . && \
           rm app.tar.gz
-          rm .env
 
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
@@ -110,6 +109,10 @@ jobs:
 
           touch database/database.sqlite
           DB_CONNECTION=sqlite DB_DATABASE=`pwd`/database/database.sqlite php artisan migrate:refresh --seed
+
+          rm .env
+          git add . && \
+          git commit -m "Migration"
 
       - uses: ngduc/vercel-deploy-action@master
         env:
