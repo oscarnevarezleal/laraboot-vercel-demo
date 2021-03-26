@@ -111,6 +111,8 @@ jobs:
           DB_CONNECTION=sqlite DB_DATABASE=`pwd`/database/database.sqlite php artisan migrate:refresh --seed
           php artisan view:cache
 
+          chmod -R 777 resources/views
+
           rm .env
           git add . && \
           git commit -m "Migration"
