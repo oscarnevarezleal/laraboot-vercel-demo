@@ -6,6 +6,8 @@ on:
       - main
       - dev
       - integration
+  release:
+    types: [published]
 
 jobs:
   integration:
