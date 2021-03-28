@@ -64,6 +64,7 @@ jobs:
           --buildpack paketo-buildpacks/php-composer \
           --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laravel-foundation-provider:dev \
           --buildpack gcr.io/paketo-buildpacks/node-engine \
+          --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laravel-config:dev \
           --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laravel-models:dev \
           --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laraboot-model-views:dev \
           --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laraboot-packer:dev \
