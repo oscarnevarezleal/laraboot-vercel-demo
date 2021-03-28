@@ -5,7 +5,7 @@
         {
           "key": "config.app/name",
           "envs": "PROJECT_NAME|APP_NAME",
-          "default": "MyApp"
+          "default": "Laraboot Vercel Demo"
         },
         {
           "key": "config.app/fallback_locale",
