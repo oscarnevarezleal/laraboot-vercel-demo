@@ -4,7 +4,7 @@
       "overrides": [
         {
           "key": "config.app/name",
-          "envs": "PROJECT_NAME|APP_NAME",
+          "envs": "ORG_NAME|PROJECT_NAME|APP_NAME",
           "default": "Laraboot Vercel Demo"
         },
         {
