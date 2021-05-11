@@ -75,8 +75,8 @@ jobs:
           laraboot task add laraboot-io/laraboot-buildpacks/laraboot-packer && \
           laraboot task add laraboot-io/laraboot-buildpacks/laravel-outofthebox
 
-          laraboot task create my-task -vvv
-          ls -ltah .laraboot/tasks/my-task
+          # laraboot task create my-task -vvv
+          # ls -ltah .laraboot/tasks/my-task
 
           # Debug
           cat laraboot.json
