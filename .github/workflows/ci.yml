@@ -41,6 +41,13 @@ jobs:
           npm i -g @laraboot-io/cli@latest
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Laraboot login
+        env:
+          LARABOOT_AUTH_TOKEN: ${{ secrets.LARABOOT_AUTH_TOKEN }}
+          LARABOOT_USERNAME: ${{ secrets.LARABOOT_USERNAME }}
+        run: |
+          laraboot --version
+          echo "${LARABOOT_AUTH_TOKEN}" | laraboot login --user="${LARABOOT_USERNAME}" -vvv
       - name: Integration test
         id: int-test
         env:
@@ -52,10 +59,6 @@ jobs:
           readonly PROJECT_NAME="demo"
           readonly PROJECT_DESC="this"
           readonly PROJECT_VERSION="0.1"
-
-          laraboot version
-
-          echo "${LARABOOT_AUTH_TOKEN}" | laraboot login --user="${LARABOOT_USERNAME}" -vvv
           laraboot project create "$PROJECT_NAME" && cd "$PROJECT_NAME"
 
           laraboot task add laraboot-io/laraboot-buildpacks/laraboot-hook-before-pack -v && \
