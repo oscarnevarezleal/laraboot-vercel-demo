@@ -36,6 +36,7 @@ jobs:
         with:
           node-version: 12
       - run: |
+          npm login
           echo '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' > ~/.npmrc
           npm i -g @laraboot-io/cli
         env:
