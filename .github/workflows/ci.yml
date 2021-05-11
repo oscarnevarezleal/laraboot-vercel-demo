@@ -49,49 +49,29 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
 
+          readonly PROJECT_NAME="demo"
+          readonly PROJECT_DESC="this"
+          readonly PROJECT_VERSION="0.1"
+
           laraboot version
 
-          pack config default-builder paketobuildpacks/builder:full
+          echo "${LARABOOT_AUTH_TOKEN}" | laraboot login --user="${LARABOOT_USERNAME}" -vvv
+          laraboot project create "$PROJECT_NAME" && cd "$PROJECT_NAME"
 
-          # Create a new laravel project here
-          composer create-project laravel/laravel laravel-base
+          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-hook-before-pack -v && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laravel-foundation-provider -v && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laravel-config -v && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laravel-models -v && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-model-views -v && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-packer -v && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laravel-outofthebox -v
 
-          pushd laravel-base
+          laraboot task create my-task -vvv
 
-          # Copy necessary file
-          cp -a ../src/vercel-files/. ./
-          cp ../src/laraboot.json .
-          ls -ltah
+          sudo chmod 666 /var/run/docker.sock
+          laraboot build dev -v
 
-          # until https://github.com/paketo-buildpacks/php-dist/issues/201 is fixed
-          readonly php_version=$(php -v | grep ^PHP | cut -d' ' -f2)
-
-          readonly php_round_version=$(printf -v T "%.2f" "$php_version")
-
-          echo "php_version=$php_version"
-          echo "php_round_version=$php_round_version"
-
-          cat composer.json | jq -r ".require.php=\"${{ matrix.php }}.*\"" > composer.tmp && \
-          mv composer.tmp composer.json && \
-          rm composer.lock && \
-          composer update
-
-          pack build test-app --path . \
-          --buildpack paketo-buildpacks/php-dist \
-          --buildpack paketo-buildpacks/php-composer \
-          --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laravel-foundation-provider:dev \
-          --buildpack gcr.io/paketo-buildpacks/node-engine \
-          --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laravel-config:dev \
-          --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laravel-models:dev \
-          --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laraboot-model-views:dev \
-          --buildpack docker://ghcr.io/laraboot-io/laraboot-buildpacks/laraboot-packer:dev \
-          --buildpack gcr.io/paketo-buildpacks/npm \
-          --builder paketobuildpacks/builder:full \
-          --clear-cache --verbose
-
-          popd
-
-          image_id=$(docker run -id test-app)
+          image_id=$("docker run -id $PROJECT_NAME")
           docker cp $image_id:/layers/laraboot-buildpacks_laraboot-packer/laraboot/app.tar.gz app.tar.gz
           ls -ltah app.tar.gz
 
