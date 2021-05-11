@@ -122,8 +122,7 @@ jobs:
           git init && \
           git add .
 
-          rm -rf ./vendor
-          composer install
+          composer update
 
           touch database/database.sqlite
           DB_CONNECTION=sqlite DB_DATABASE=`pwd`/database/database.sqlite php artisan migrate:refresh --seed --force
