@@ -100,7 +100,7 @@ jobs:
     needs: integration
     strategy:
       matrix:
-        php: [ "7.4", "8.0" ]
+        php: [ "7.4" ]
     steps:
       - name: Extract Branch Name
         run: echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
@@ -126,7 +126,7 @@ jobs:
           composer install
 
           touch database/database.sqlite
-          DB_CONNECTION=sqlite DB_DATABASE=`pwd`/database/database.sqlite php artisan migrate:refresh --seed
+          DB_CONNECTION=sqlite DB_DATABASE=`pwd`/database/database.sqlite php artisan migrate:refresh --seed --force
           php artisan view:cache
 
           chmod -R 777 resources/views
@@ -137,7 +137,6 @@ jobs:
 
       - name: Preview release
         uses: ngduc/vercel-deploy-action@master
-        if: ${{ matrix.php == '7.4' }}
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -152,7 +151,7 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}} #Required
           working-directory: ./
       - name: Release into production
-        if: ${{ matrix.php == '8.0' && github.event_name == 'release' }}
+        if: ${{ matrix.php == '7.4' && github.event_name == 'release' }}
         uses: ngduc/vercel-deploy-action@master
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
