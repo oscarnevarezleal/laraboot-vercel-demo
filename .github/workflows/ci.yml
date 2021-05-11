@@ -63,7 +63,9 @@ jobs:
           # Enable network communication with Docker socket.
           sudo chmod 666 /var/run/docker.sock
 
-          laraboot init --name="${PROJECT_NAME}" --directory=`pwd`
+          mkdir $PROJECT_NAME
+          cd $PROJECT_NAME
+          laraboot init --name="${PROJECT_NAME}" --directory=`pwd` || exit 125
 
           laraboot task add laraboot-io/laraboot-buildpacks/laraboot-hook-before-pack && \
           laraboot task add laraboot-io/laraboot-buildpacks/laravel-foundation-provider && \
