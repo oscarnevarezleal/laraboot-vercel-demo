@@ -29,7 +29,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
-      - name: Get Pack
+      - name: Install dependencies
         run: |
           (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.17.0/pack-v0.17.0-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack)
       - uses: actions/setup-node@v2
@@ -63,7 +63,7 @@ jobs:
           # Enable network communication with Docker socket.
           sudo chmod 666 /var/run/docker.sock
 
-          laraboot project create "$PROJECT_NAME" && cd "$PROJECT_NAME"
+          laraboot init --name="${PROJECT_NAME}" --directory=`pwd`
 
           laraboot task add laraboot-io/laraboot-buildpacks/laraboot-hook-before-pack && \
           laraboot task add laraboot-io/laraboot-buildpacks/laravel-foundation-provider && \
