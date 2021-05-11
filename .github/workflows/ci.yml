@@ -120,8 +120,7 @@ jobs:
           git config --global user.name "Your Name"
 
           git init && \
-          git add . && \
-          git commit -m "First commit"
+          git add .
 
           rm -rf ./vendor
           composer install
