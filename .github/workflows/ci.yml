@@ -37,7 +37,12 @@ jobs:
         env:
           ECR_REGISTRY: ghcr.io/laraboot-io
           PHP_VERSION: ${{ matrix.php }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
+          npm i -g @laraboot-io/cli
+          laraboot version
+
           pack config default-builder paketobuildpacks/builder:full
 
           # Create a new laravel project here
