@@ -7,7 +7,7 @@ on:
       - dev
       - integration
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   integration:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: ["7.4", "8.0"]
+        php: [ "7.4", "8.0" ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -32,6 +32,12 @@ jobs:
       - name: Get Pack
         run: |
           (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.17.0/pack-v0.17.0-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack)
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
+      - run: npm i -g @laraboot-io/cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Integration test
         id: int-test
         env:
@@ -40,7 +46,6 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
-          npm i -g @laraboot-io/cli
           laraboot version
 
           pack config default-builder paketobuildpacks/builder:full
@@ -99,7 +104,7 @@ jobs:
     needs: integration
     strategy:
       matrix:
-        php: ["7.4", "8.0"]
+        php: [ "7.4", "8.0" ]
     steps:
       - name: Extract Branch Name
         run: echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
