@@ -84,7 +84,7 @@ jobs:
           laraboot build dev
           docker images
 
-          image_id=$("docker run -id $PROJECT_NAME")
+          image_id=$(docker run -id $PROJECT_NAME)
           docker cp $image_id:/layers/laraboot-buildpacks_laraboot-packer/laraboot/app.tar.gz app.tar.gz
           ls -ltah app.tar.gz
 
