@@ -36,8 +36,8 @@ jobs:
         with:
           node-version: 12
       - run: |
-          echo '@laraboot-io:registry=https://registry.npmjs.com/' > ~/.npmrc
-          echo '//registry.npmjs.com/:_authToken=${NODE_AUTH_TOKEN}' >> ~/.npmrc
+          npm config set //registry.npmjs.org/:_authToken ${NODE_AUTH_TOKEN}
+          echo "@laraboot-io:registry=https://registry.npmjs.org" >> ~/.npmrc
           npm i -g @laraboot-io/cli
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
