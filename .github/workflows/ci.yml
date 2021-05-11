@@ -92,7 +92,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app-php${{ matrix.php }}
-          path: app.tar.gz
+          path: $PROJECT_NAME/app.tar.gz
 
   release:
     name: Release
