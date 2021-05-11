@@ -35,7 +35,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 12
-      - run: npm i -g @laraboot-io/cli
+      - run: |
+          echo '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' > ~/.npmrc
+          npm i -g @laraboot-io/cli
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Integration test
@@ -45,7 +47,7 @@ jobs:
           PHP_VERSION: ${{ matrix.php }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
+
           laraboot version
 
           pack config default-builder paketobuildpacks/builder:full
