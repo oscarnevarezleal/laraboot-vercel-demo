@@ -59,19 +59,25 @@ jobs:
           readonly PROJECT_NAME="demo"
           readonly PROJECT_DESC="this"
           readonly PROJECT_VERSION="0.1"
+
+          # Enable network communication with Docker socket.
+          sudo chmod 666 /var/run/docker.sock
+
           laraboot project create "$PROJECT_NAME" && cd "$PROJECT_NAME"
 
-          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-hook-before-pack -v && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-foundation-provider -v && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-config -v && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-models -v && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-model-views -v && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-packer -v && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-outofthebox -v
+          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-hook-before-pack && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laravel-foundation-provider && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laravel-config && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laravel-models && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-model-views && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-packer && \
+          laraboot task add laraboot-io/laraboot-buildpacks/laravel-outofthebox
 
           laraboot task create my-task -vvv
 
-          sudo chmod 666 /var/run/docker.sock
+          # Debug
+          cat laraboot.json
+
           laraboot build dev -v
 
           image_id=$("docker run -id $PROJECT_NAME")
