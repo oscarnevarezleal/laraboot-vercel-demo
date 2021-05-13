@@ -35,12 +35,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 12
-      - run: |
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
           npm config set //registry.npmjs.org/:_authToken ${NODE_AUTH_TOKEN}
           echo "@laraboot-io:registry=https://registry.npmjs.org" >> ~/.npmrc
           npm i -g @laraboot-io/cli@1.2.7
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Laraboot login
         env:
           LARABOOT_AUTH_TOKEN: ${{ secrets.LARABOOT_AUTH_TOKEN }}
