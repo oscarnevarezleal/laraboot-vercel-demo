@@ -86,7 +86,7 @@ jobs:
           # Copy necessary file
           cp -a ../../src/vercel-files/. ./
 
-          laraboot build dev
+          laraboot build dev -vvv
           docker images
 
           image_id=$(docker run -id $PROJECT_NAME)
