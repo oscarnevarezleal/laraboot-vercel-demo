@@ -38,7 +38,7 @@ jobs:
       - run: |
           npm config set //registry.npmjs.org/:_authToken ${NODE_AUTH_TOKEN}
           echo "@laraboot-io:registry=https://registry.npmjs.org" >> ~/.npmrc
-          npm i -g @laraboot-io/cli@latest
+          npm i -g @laraboot-io/cli@1.2.4
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Laraboot login
