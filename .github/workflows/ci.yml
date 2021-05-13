@@ -65,7 +65,7 @@ jobs:
 
           mkdir $PROJECT_NAME
           cd $PROJECT_NAME
-          laraboot init --name="${PROJECT_NAME}" --directory=`pwd` || exit 125
+          laraboot project create "$PROJECT_NAME" --skip-laravel-installer --directory=`pwd` || exit 125
 
           laraboot task add laraboot-io/laraboot-buildpacks/laraboot-hook-before-pack && \
           laraboot task add laraboot-io/laraboot-buildpacks/laravel-foundation-provider && \
