@@ -63,11 +63,11 @@ jobs:
           # Enable network communication with Docker socket.
           sudo chmod 666 /var/run/docker.sock
 
-          mkdir $PROJECT_NAME
-          cd $PROJECT_NAME
+          mkdir tmp && cd tmp
           ls -ltah /opt/hostedtoolcache/node/12.22.1/x64/lib/node_modules/@laraboot-io/cli/src
           ls -ltah /opt/hostedtoolcache/node/12.22.1/x64/lib/node_modules/@laraboot-io/cli/stubs
           laraboot project create "$PROJECT_NAME" --skip-laravel-installer --directory=`pwd` -vvv || exit 125
+          cd $PROJECT_NAME
 
           laraboot task add laraboot-io/laraboot-buildpacks/laraboot-hook-before-pack && \
           laraboot task add laraboot-io/laraboot-buildpacks/laravel-foundation-provider && \
@@ -97,7 +97,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app-php${{ matrix.php }}
-          path: demo/app.tar.gz
+          path: tmp/demo/app.tar.gz
 
   release:
     name: Release
