@@ -84,7 +84,7 @@ jobs:
           cat laraboot.json
 
           # Copy necessary file
-          cp -a ../src/vercel-files/. ./
+          cp -a ../../src/vercel-files/. ./
 
           laraboot build dev
           docker images
