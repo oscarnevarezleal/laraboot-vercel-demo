@@ -63,6 +63,8 @@ jobs:
           sudo chmod 666 /var/run/docker.sock
 
           mkdir $PROJECT_NAME
+          sudo chmod -R 777 $PROJECT_NAME
+
           cd $PROJECT_NAME
           laraboot init --name="${PROJECT_NAME}" --directory=`pwd` || exit 125
 
@@ -70,8 +72,8 @@ jobs:
           laraboot task add @core/laravel-foundation-provider && \
           laraboot task add @core/laravel-config && \
           laraboot task add @core/laravel-model && \
-          laraboot task add @core/laravel-starterkit-buildpack && \
           laraboot task add @core/laraboot-model-views && \
+          laraboot task add @core/laravel-starterkit-buildpack && \
           laraboot task add @core/laraboot-packer && \
           laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend
 
@@ -84,7 +86,7 @@ jobs:
           # Copy necessary file
           cp -a ../src/vercel-files/. ./
 
-          laraboot build dev
+          laraboot build dev -vvv
           docker images
 
           image_id=$(docker run -id $PROJECT_NAME)
