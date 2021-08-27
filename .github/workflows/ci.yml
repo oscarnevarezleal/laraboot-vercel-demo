@@ -66,14 +66,12 @@ jobs:
           cd $PROJECT_NAME
           laraboot init --name="${PROJECT_NAME}" --directory=`pwd` || exit 125
 
-          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-hook-before-pack && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-foundation-provider && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-config && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-models && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-model-views && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-packer && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-outofthebox
-
+          laraboot task add @core/laraboot-hook-before-pack && \
+          laraboot task add @core/laravel-foundation-provider && \
+          laraboot task add @core/laravel-config && \
+          laraboot task add @core/laravel-models && \
+          laraboot task add @core/laraboot-model-views && \
+          laraboot task add @core/laraboot-packer
           # laraboot task create my-task -vvv
           # ls -ltah .laraboot/tasks/my-task
 
