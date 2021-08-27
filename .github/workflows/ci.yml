@@ -50,6 +50,7 @@ jobs:
       - name: Integration test
         id: int-test
         env:
+          DEBUG: "*,-axios,-http,-follow-redirects,-babel,-babel:*"
           ECR_REGISTRY: ghcr.io/laraboot-io
           PHP_VERSION: ${{ matrix.php }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
