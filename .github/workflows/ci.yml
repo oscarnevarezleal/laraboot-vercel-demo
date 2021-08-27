@@ -69,9 +69,12 @@ jobs:
           laraboot task add @core/laraboot-hook-before-pack && \
           laraboot task add @core/laravel-foundation-provider && \
           laraboot task add @core/laravel-config && \
-          laraboot task add @core/laravel-models && \
+          laraboot task add @core/laravel-model && \
+          laraboot task add @core/laravel-starterkit-buildpack && \
           laraboot task add @core/laraboot-model-views && \
-          laraboot task add @core/laraboot-packer
+          laraboot task add @core/laraboot-packer && \
+          laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend
+
           # laraboot task create my-task -vvv
           # ls -ltah .laraboot/tasks/my-task
 
