@@ -72,10 +72,10 @@ jobs:
           sudo chmod 666 /var/run/docker.sock
 
           mkdir $PROJECT_NAME
-          sudo chmod -R 777 $PROJECT_NAME
 
           cd $PROJECT_NAME
           laraboot init --name="${PROJECT_NAME}" --directory=`pwd` || exit 125
+          sudo chmod -R 777 $PROJECT_NAME
 
           laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external && \
           laraboot task add @core/laravel-foundation-provider --format=file -vvv
