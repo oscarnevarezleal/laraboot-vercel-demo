@@ -93,11 +93,11 @@ jobs:
           # Debug
           cat laraboot.json
 
-          # Copy necessary file
-          cp -a ../src/vercel-files/. ./
-
           DEBUG=* laraboot build dev -vvv --pack-params default-process=task
           docker images
+
+          # Copy necessary file
+          cp -a ../src/vercel-files/. ./
 
           image_id=$(docker run -id $PROJECT_NAME)
           docker cp $image_id:/layers/laraboot-buildpacks_laraboot-packer/laraboot/app.tar.gz app.tar.gz
