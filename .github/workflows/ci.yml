@@ -56,7 +56,7 @@ jobs:
       - name: Integration test
         id: int-test
         env:
-          DEBUG: "*,-axios,-http,-follow-redirects,-babel,-babel:*"
+          DEBUG: "*"
           ECR_REGISTRY: ghcr.io/laraboot-io
           PHP_VERSION: ${{ matrix.php }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -87,13 +87,7 @@ jobs:
           laraboot task add @core/laraboot-hook-before-pack --format=file -vvv && \
           laraboot task add @core/laraboot-packer --format=file -vvv
 
-          # laraboot task create my-task -vvv
-          # ls -ltah .laraboot/tasks/my-task
-
-          # Debug
-          cat laraboot.json
-
-          DEBUG=* laraboot build dev -vvv --pack-params default-process=task
+          DEBUG=* laraboot build dev -vv --pack-params default-process=task
           docker images
 
           # Copy necessary file
