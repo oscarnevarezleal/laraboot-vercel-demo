@@ -23,6 +23,16 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Setup laraboot CLI
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        uses: laraboot-io/github-actions/setup-cli@cli-actions
+      - name: Authenticate
+        run: |
+          echo "${{ secrets.LARABOOT_TOKEN }}" | laraboot login --user "${{ secrets.LARABOOT_USERNAME }}" -vvv
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
@@ -40,13 +50,9 @@ jobs:
           npm i -g @laraboot-io/cli@latest
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Laraboot login
-        env:
-          LARABOOT_AUTH_TOKEN: ${{ secrets.LARABOOT_AUTH_TOKEN }}
-          LARABOOT_USERNAME: ${{ secrets.LARABOOT_USERNAME }}
+      - name: Authenticate
         run: |
-          laraboot --version
-          echo "${LARABOOT_AUTH_TOKEN}" | laraboot login --user="${LARABOOT_USERNAME}" -vvv
+          echo "${{ secrets.LARABOOT_AUTH_TOKEN }}" | laraboot login --user "${{ secrets.LARABOOT_USERNAME }}" -vvv
       - name: Integration test
         id: int-test
         env:
@@ -69,14 +75,15 @@ jobs:
           cd $PROJECT_NAME
           laraboot init --name="${PROJECT_NAME}" --directory=`pwd` || exit 125
 
-          laraboot task add @core/laraboot-hook-before-pack -vvv && \
-          laraboot task add @core/laravel-foundation-provider -vvv && \
+          laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external && \
+          laraboot task add @core/laravel-foundation-provider -vvv
+
+          laraboot task add @core/laravel-starterkit-buildpack -vvv && \
           laraboot task add @core/laravel-config -vvv && \
           laraboot task add @core/laravel-model -vvv && \
           laraboot task add @core/laraboot-model-views -vvv && \
-          laraboot task add @core/laravel-starterkit-buildpack -vvv && \
-          laraboot task add @core/laraboot-packer -vvv && \
-          laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend
+          laraboot task add @core/laraboot-hook-before-pack -vvv && \
+          laraboot task add @core/laraboot-packer -vvv
 
           # laraboot task create my-task -vvv
           # ls -ltah .laraboot/tasks/my-task
