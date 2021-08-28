@@ -96,7 +96,7 @@ jobs:
           # Copy necessary file
           cp -a ../src/vercel-files/. ./
 
-          laraboot build dev -vvv
+          DEBUG=* laraboot build dev -vvv --pack-params default-process=task
           docker images
 
           image_id=$(docker run -id $PROJECT_NAME)
