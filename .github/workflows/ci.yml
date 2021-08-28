@@ -76,14 +76,14 @@ jobs:
           laraboot init --name="${PROJECT_NAME}" --directory=`pwd` || exit 125
 
           laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external && \
-          laraboot task add @core/laravel-foundation-provider -vvv
+          laraboot task add @core/laravel-foundation-provider --format=file -vvv
 
-          laraboot task add @core/laravel-starterkit-buildpack -vvv && \
-          laraboot task add @core/laravel-config -vvv && \
-          laraboot task add @core/laravel-model -vvv && \
-          laraboot task add @core/laravel-model-views -vvv && \
-          laraboot task add @core/laraboot-hook-before-pack -vvv && \
-          laraboot task add @core/laraboot-packer -vvv
+          laraboot task add @core/laravel-starterkit-buildpack --format=file -vvv && \
+          laraboot task add @core/laravel-config --format=file -vvv && \
+          laraboot task add @core/laravel-model --format=file -vvv && \
+          laraboot task add @core/laravel-model-views --format=file -vvv && \
+          laraboot task add @core/laraboot-hook-before-pack --format=file -vvv && \
+          laraboot task add @core/laraboot-packer --format=file -vvv
 
           # laraboot task create my-task -vvv
           # ls -ltah .laraboot/tasks/my-task
