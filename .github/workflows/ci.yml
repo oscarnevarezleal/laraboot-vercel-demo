@@ -87,7 +87,7 @@ jobs:
           laraboot task add @core/laraboot-hook-before-pack --format=file -vvv && \
           laraboot task add @core/laraboot-packer --format=file -vvv
 
-          DEBUG=* laraboot build dev -vv --pack-params default-process=task
+          DEBUG=* laraboot build dev -vvv --pack-params default-process=task
           docker images
 
           # Copy necessary file
