@@ -12,7 +12,7 @@ tasks:
     laraboot task add @core/laravel-starterkit-buildpack --format=file -vvv
     laraboot task add @core/laraboot-packer --format=file -vvv
     laraboot task add @core/laraboot-hook-before-pack --format=file -vvv
-    DEBUG=* laraboot build dev -vvv --pack-params default-process=task || true
+    DEBUG=* laraboot build dev -vvv --pack-params default-process=task
 # Ports to expose on workspace startup
 ports:
   - port: 8000
