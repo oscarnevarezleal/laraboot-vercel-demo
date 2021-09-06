@@ -1,25 +1,17 @@
 # Commands to start on workspace startup
+checkoutLocation: src
 tasks:
   - init: Install cli
     command: npm i -g @laraboot-io/cli
-  - name: Init
-    command: mkdir app && cd app && laraboot init --name=app --description="simple app" --php-version="8.0.*"
-  - name: Add node task
-    command: laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external
-  - name: Add foundation task
-    command: laraboot task add @core/laravel-foundation-provider --format=file -vvv
-  - name: Add config task
-    command: laraboot task add @core/laravel-config --format=file -vvv
-  - name: Add views task
-    command: laraboot task add @core/laravel-model-views --format=file -vvv
-  - name: Add starterkit task
-    command: laraboot task add @core/laravel-starterkit-buildpack --format=file -vvv
-  - name: Add packer task
-    command: laraboot task add @core/laraboot-packer --format=file -vvv
-  - name: Add packer hook
-    command: laraboot task add @core/laraboot-hook-before-pack --format=file -vvv
-  - name: Build
-    command: laraboot build dev -vvv --pack-params default-process=task
+  - command: laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external
+  - command: laraboot task add @core/laravel-foundation-provider --format=file -vvv
+  - command: laraboot task add @core/laravel-config --format=file -vvv
+  - command: laraboot task add @core/laravel-model-views --format=file -vvv
+  - command: laraboot task add @core/laravel-starterkit-buildpack --format=file -vvv
+  - command: laraboot task add @core/laraboot-packer --format=file -vvv
+  - command: laraboot task add @core/laraboot-hook-before-pack --format=file -vvv
+  - command: laraboot build dev -vvv --pack-params default-process=task
+  - command: laraboot run
 # Ports to expose on workspace startup
 ports:
   - port: 8000
