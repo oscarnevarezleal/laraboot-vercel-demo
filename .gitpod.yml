@@ -7,7 +7,7 @@ tasks:
     command: |
       laraboot --version
       cd /workspace/laraboot-vercel-demo/src
-      cp laraboot.json ~/.local/share/laraboot.json
+      mkdir -p ~/.local/share/ && cp laraboot.json ~/.local/share/laraboot.json
       laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external
       laraboot task add @core/laravel-foundation-provider --format=file -vvv
       laraboot task add @core/laravel-config --format=file -vvv
