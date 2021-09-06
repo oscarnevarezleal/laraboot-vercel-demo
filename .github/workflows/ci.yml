@@ -82,7 +82,7 @@ jobs:
           docker images
 
           # Copy necessary file
-          cp -a ../src/vercel-files/. ./
+          cp -R ../src/vercel-files/. ./
 
           image_id=$(docker run -id $PROJECT_NAME)
           docker cp $image_id:/layers/laraboot-buildpacks_laraboot-packer/laraboot/app.tar.gz app.tar.gz
