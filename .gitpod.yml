@@ -1,5 +1,5 @@
 # Commands to start on workspace startup
-workspaceLocation: src
+workspaceLocation: laraboot-vercel-demo/src
 tasks:
   - name: Install cli
     init: npm i -g @laraboot-io/cli
