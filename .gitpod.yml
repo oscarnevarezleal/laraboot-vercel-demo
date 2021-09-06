@@ -1,8 +1,9 @@
 # Commands to start on workspace startup
 workspaceLocation: src
 tasks:
-  - init: Install cli
-    command: npm i -g @laraboot-io/cli
+  - name: Install cli
+    init: npm i -g @laraboot-io/cli
+    command: laraboot --version
   - command: laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external
   - command: laraboot task add @core/laravel-foundation-provider --format=file -vvv
   - command: laraboot task add @core/laravel-config --format=file -vvv
