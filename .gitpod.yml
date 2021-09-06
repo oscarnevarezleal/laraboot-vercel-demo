@@ -2,9 +2,11 @@
 workspaceLocation: laraboot-vercel-demo/src
 tasks:
   - name: Install cli
+    openMode: tab-after
     init: npm i -g @laraboot-io/cli
     command: |
       cd /workspace/laraboot-vercel-demo/src
+      pwd
       laraboot --version
       laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external
       laraboot task add @core/laravel-foundation-provider --format=file -vvv
