@@ -3,7 +3,7 @@ tasks:
   - init: Install cli
     command: npm i -g @laraboot-io/cli
   - name: Init
-    command: laraboot init --name=app --description="Simple App" --php-version="8.0.*"
+    command: mkdir app && cd app && laraboot init --name=app --description="simple app" --php-version="8.0.*"
   - name: Add node task
     command: laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external
   - name: Add foundation task
