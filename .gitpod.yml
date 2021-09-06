@@ -1,5 +1,5 @@
 # Commands to start on workspace startup
-checkoutLocation: src
+workspaceLocation: src
 tasks:
   - init: Install cli
     command: npm i -g @laraboot-io/cli
