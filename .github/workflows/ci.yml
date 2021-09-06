@@ -23,6 +23,16 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
+      - name: Setup laraboot CLI
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        uses: laraboot-io/github-actions/setup-cli@cli-actions
+      - name: Authenticate
+        run: |
+          echo "${{ secrets.LARABOOT_TOKEN }}" | laraboot login --user "${{ secrets.LARABOOT_USERNAME }}" -vvv
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
@@ -30,30 +40,19 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
       - name: Install dependencies
+        uses: buildpacks/github-actions/setup-pack@v4.1.0
+      - name: Authenticate
         run: |
-          (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.17.0/pack-v0.17.0-linux.tgz" | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack)
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 12
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          npm config set //registry.npmjs.org/:_authToken ${NODE_AUTH_TOKEN}
-          echo "@laraboot-io:registry=https://registry.npmjs.org" >> ~/.npmrc
-          npm i -g @laraboot-io/cli@1.2.7
-      - name: Laraboot login
-        env:
-          LARABOOT_AUTH_TOKEN: ${{ secrets.LARABOOT_AUTH_TOKEN }}
-          LARABOOT_USERNAME: ${{ secrets.LARABOOT_USERNAME }}
-        run: |
-          laraboot --version
-          echo "${LARABOOT_AUTH_TOKEN}" | laraboot login --user="${LARABOOT_USERNAME}" -vvv
+          echo "${{ secrets.LARABOOT_AUTH_TOKEN }}" | laraboot login --user "${{ secrets.LARABOOT_USERNAME }}" -vvv
       - name: Integration test
         id: int-test
         env:
+          DEBUG: "*"
           ECR_REGISTRY: ghcr.io/laraboot-io
           PHP_VERSION: ${{ matrix.php }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          AWS_REGION: us-east-1
+          AWS_DEFAULT_REGION: us-east-1
         run: |
 
           readonly PROJECT_NAME="demo"
@@ -63,31 +62,27 @@ jobs:
           # Enable network communication with Docker socket.
           sudo chmod 666 /var/run/docker.sock
 
-          mkdir tmp && cd tmp
-          ls -ltah /opt/hostedtoolcache/node/12.22.1/x64/lib/node_modules/@laraboot-io/cli/src
-          ls -ltah /opt/hostedtoolcache/node/12.22.1/x64/lib/node_modules/@laraboot-io/cli/stubs
-          laraboot project create "$PROJECT_NAME" --skip-laravel-installer --directory=`pwd` -vvv || exit 125
+          mkdir $PROJECT_NAME
+
           cd $PROJECT_NAME
+          laraboot init --name="${PROJECT_NAME}" --description="Simple project" --php-version="$PHP_VERSION.*" || exit 125
+          sudo chmod -R 777 .
 
-          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-hook-before-pack && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-foundation-provider && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-config && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-models && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-model-views && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laraboot-packer && \
-          laraboot task add laraboot-io/laraboot-buildpacks/laravel-outofthebox
+          laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external && \
+          laraboot task add @core/laravel-foundation-provider --format=file -vvv
 
-          # laraboot task create my-task -vvv
-          # ls -ltah .laraboot/tasks/my-task
+          laraboot task add @core/laravel-starterkit-buildpack --format=file -vvv && \
+          laraboot task add @core/laravel-config --format=file -vvv && \
+          laraboot task add @core/laravel-model --format=file -vvv && \
+          laraboot task add @core/laravel-model-views --format=file -vvv && \
+          laraboot task add @core/laraboot-hook-before-pack --format=file -vvv && \
+          laraboot task add @core/laraboot-packer --format=file -vvv
 
-          # Debug
-          cat laraboot.json
+          DEBUG=* laraboot build dev -vvv --pack-params default-process=task
+          docker images
 
           # Copy necessary file
-          cp -a ../../src/vercel-files/. ./
-
-          laraboot build dev -vvv
-          docker images
+          cp -a ../src/vercel-files/. ./
 
           image_id=$(docker run -id $PROJECT_NAME)
           docker cp $image_id:/layers/laraboot-buildpacks_laraboot-packer/laraboot/app.tar.gz app.tar.gz
@@ -97,7 +92,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app-php${{ matrix.php }}
-          path: tmp/demo/app.tar.gz
+          path: demo/app.tar.gz
 
   release:
     name: Release
