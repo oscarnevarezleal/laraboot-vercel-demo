@@ -44,8 +44,8 @@ jobs:
       - name: Authenticate
         run: |
           echo "${{ secrets.LARABOOT_AUTH_TOKEN }}" | laraboot login --user "${{ secrets.LARABOOT_USERNAME }}" -vvv
-      - name: Integration test
-        id: int-test
+      - name: Build app
+        id: build
         env:
           DEBUG: "*"
           ECR_REGISTRY: ghcr.io/laraboot-io
@@ -140,7 +140,7 @@ jobs:
           git add . && \
           git commit -m "Migration"
 
-          yarn
+          npm i
           git add . && \
           git commit -m "Npm"
 
