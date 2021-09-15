@@ -43,7 +43,7 @@ jobs:
         uses: buildpacks/github-actions/setup-pack@v4.1.0
       - name: Authenticate
         run: |
-          echo "${{ secrets.LARABOOT_AUTH_TOKEN }}" | laraboot login --user "${{ secrets.LARABOOT_USERNAME }}" -vvv
+          echo "${{ secrets.LARABOOT_AUTH_TOKEN }}" | laraboot login "${{ secrets.LARABOOT_USERNAME }}" -vvv
       - name: Build app
         id: build
         env:
