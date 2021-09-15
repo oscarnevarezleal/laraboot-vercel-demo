@@ -85,7 +85,8 @@ jobs:
           ls -ltah ../src/vercel-files/
           ls -ltah .
 
-          image_id=$(docker run -id $PROJECT_NAME)
+          # Why test-app ?
+          image_id=$(docker run -id test-app)
           docker cp $image_id:/layers/laraboot-buildpacks_laraboot-packer/laraboot/app.tar.gz app.tar.gz
           ls -ltah app.tar.gz
 
