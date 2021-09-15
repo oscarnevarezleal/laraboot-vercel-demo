@@ -62,8 +62,6 @@ jobs:
           # Enable network communication with Docker socket.
           sudo chmod 666 /var/run/docker.sock
 
-          mkdir $PROJECT_NAME
-
           laraboot new "${PROJECT_NAME}" || exit 125
           cd $PROJECT_NAME
           cp ../../src/laraboot.json .
