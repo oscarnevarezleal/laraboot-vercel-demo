@@ -8,7 +8,7 @@ tasks:
       laraboot --version
       cd /workspace/laraboot-vercel-demo/src
       sudo chmod 666 /var/run/docker.sock
-      laraboot new demo && cd demo
+      laraboot new test-app && cd test-app
       cp ../laraboot.json .
       laraboot build dev -vvv --pack-params default-process=task
       laraboot run --port=8080
