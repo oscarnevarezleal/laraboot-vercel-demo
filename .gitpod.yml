@@ -8,6 +8,9 @@ tasks:
       laraboot --version
       cd /workspace/laraboot-vercel-demo/src
       mkdir -p ~/.local/share/ && cp laraboot.json ~/.local/share/laraboot.json
+      laraboot new gitpod && cd gitpod
+      laraboot build dev -vvv --pack-params default-process=task
+      laraboot run --port=8080
 # Ports to expose on workspace startup
 ports:
   - port: 8000
