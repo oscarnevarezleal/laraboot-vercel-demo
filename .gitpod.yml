@@ -8,15 +8,8 @@ tasks:
       laraboot --version
       cd /workspace/laraboot-vercel-demo/src
       mkdir -p ~/.local/share/ && cp laraboot.json ~/.local/share/laraboot.json
-      laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external
-      laraboot task add @core/laravel-foundation-provider --format=file -vvv
-      laraboot task add @core/laravel-config --format=file -vvv
-      laraboot task add @core/laravel-model-views --format=file -vvv
-      laraboot task add @core/laravel-starterkit-buildpack --format=file -vvv
-      laraboot task add @core/laraboot-packer --format=file -vvv
-      laraboot task add @core/laraboot-hook-before-pack --format=file -vvv
       laraboot build dev -vvv --pack-params default-process=task
-      laraboot run
+      laraboot run --port=8080
 # Ports to expose on workspace startup
 ports:
   - port: 8000
