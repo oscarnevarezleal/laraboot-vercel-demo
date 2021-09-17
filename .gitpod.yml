@@ -6,7 +6,7 @@ tasks:
     init: npm i -g @laraboot-io/cli
     command: |
       laraboot --version
-      cd /workspace/laraboot-vercel-demo/srcs
+      cd /workspace/laraboot-vercel-demo/src
       sudo chmod 666 /var/run/docker.sock
       laraboot new demo && cd demo
       cp ../laraboot.json .
