@@ -6,10 +6,10 @@ tasks:
     init: npm i -g @laraboot-io/cli
     command: |
       laraboot --version
-      cd /workspace/laraboot-vercel-demo/src
-      mkdir -p ~/.local/share/ && cp laraboot.json ~/.local/share/laraboot.json
+      cd /workspace/laraboot-vercel-demo/srcs
       sudo chmod 666 /var/run/docker.sock
-      laraboot new gitpod && cd gitpod
+      laraboot new demo && cd demo
+      cp ../laraboot.json .
       laraboot build dev -vvv --pack-params default-process=task
       laraboot run --port=8080
 # Ports to expose on workspace startup
