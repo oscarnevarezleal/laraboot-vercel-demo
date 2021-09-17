@@ -141,6 +141,7 @@ jobs:
           git commit -m "Migration"
 
       - name: Preview release
+        if: ${{ github.ref == 'refs/heads/main' && matrix.php == '7.4' }}
         uses: ngduc/vercel-deploy-action@master
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
