@@ -25,14 +25,14 @@ jobs:
           php-version: ${{ matrix.php }}
       - uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 14
       - name: Setup laraboot CLI
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         uses: laraboot-io/github-actions/setup-cli@cli-actions
       - name: Authenticate
         run: |
-          echo "${{ secrets.LARABOOT_TOKEN }}" | laraboot login --user "${{ secrets.LARABOOT_USERNAME }}" -vvv
+          echo "${{ secrets.LARABOOT_TOKEN }}" | laraboot login "${{ secrets.LARABOOT_USERNAME }}"
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
@@ -43,9 +43,9 @@ jobs:
         uses: buildpacks/github-actions/setup-pack@v4.1.0
       - name: Authenticate
         run: |
-          echo "${{ secrets.LARABOOT_AUTH_TOKEN }}" | laraboot login --user "${{ secrets.LARABOOT_USERNAME }}" -vvv
-      - name: Integration test
-        id: int-test
+          echo "${{ secrets.LARABOOT_AUTH_TOKEN }}" | laraboot login "${{ secrets.LARABOOT_USERNAME }}" -vvv
+      - name: Build app
+        id: build
         env:
           DEBUG: "*"
           ECR_REGISTRY: ghcr.io/laraboot-io
@@ -55,36 +55,38 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
         run: |
 
-          readonly PROJECT_NAME="demo"
+          readonly PROJECT_NAME="test-app"
           readonly PROJECT_DESC="this"
           readonly PROJECT_VERSION="0.1"
 
           # Enable network communication with Docker socket.
           sudo chmod 666 /var/run/docker.sock
 
-          mkdir $PROJECT_NAME
-
+          laraboot new "${PROJECT_NAME}" || exit 125
           cd $PROJECT_NAME
-          laraboot init --name="${PROJECT_NAME}" --description="Simple project" --php-version="$PHP_VERSION.*" || exit 125
+          cp ../src/laraboot.json .
           sudo chmod -R 777 .
 
           laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external && \
           laraboot task add @core/laravel-foundation-provider --format=file -vvv
 
-          laraboot task add @core/laravel-starterkit-buildpack --format=file -vvv && \
-          laraboot task add @core/laravel-config --format=file -vvv && \
-          laraboot task add @core/laravel-model --format=file -vvv && \
+          laraboot task add @core/laravel-config --format=file -vvv
           laraboot task add @core/laravel-model-views --format=file -vvv && \
           laraboot task add @core/laraboot-hook-before-pack --format=file -vvv && \
-          laraboot task add @core/laraboot-packer --format=file -vvv
+          laraboot task add @core/laraboot-packer --format=file -vvv && \
+          laraboot task add @core/laravel-model --format=file -vvv && \
+          laraboot task add @core/laravel-foundation-provider --format=file -vvv
 
           DEBUG=* laraboot build dev -vvv --pack-params default-process=task
           docker images
 
           # Copy necessary file
-          cp -a ../src/vercel-files/. ./
+          cp -R ../src/vercel-files/. ./
+          ls -ltah ../src/vercel-files/
+          ls -ltah .
 
-          image_id=$(docker run -id $PROJECT_NAME)
+          # Why test-app ?
+          image_id=$(docker run -id test-app)
           docker cp $image_id:/layers/laraboot-buildpacks_laraboot-packer/laraboot/app.tar.gz app.tar.gz
           ls -ltah app.tar.gz
 
@@ -92,7 +94,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app-php${{ matrix.php }}
-          path: demo/app.tar.gz
+          path: test-app/app.tar.gz
 
   release:
     name: Release
@@ -104,6 +106,9 @@ jobs:
     steps:
       - name: Extract Branch Name
         run: echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
       - name: Download buildpacks
         uses: actions/download-artifact@v2
         with:
@@ -136,6 +141,7 @@ jobs:
           git commit -m "Migration"
 
       - name: Preview release
+        if: ${{ github.ref == 'refs/heads/main' && matrix.php == '7.4' }}
         uses: ngduc/vercel-deploy-action@master
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'

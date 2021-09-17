@@ -1,0 +1,18 @@
+# Commands to start on workspace startup
+workspaceLocation: laraboot-vercel-demo/src
+tasks:
+  - name: Install cli
+    openMode: tab-after
+    init: npm i -g @laraboot-io/cli
+    command: |
+      laraboot --version
+      cd /workspace/laraboot-vercel-demo/src
+      sudo chmod 666 /var/run/docker.sock
+      laraboot new test-app && cd test-app
+      cp ../laraboot.json .
+      laraboot build dev -vvv --pack-params default-process=task
+      laraboot run --port=8080
+# Ports to expose on workspace startup
+ports:
+  - port: 8080
+    onOpen: open-preview
