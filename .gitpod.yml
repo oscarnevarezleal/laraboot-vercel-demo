@@ -8,7 +8,7 @@ tasks:
       laraboot --version
       cd /workspace/laraboot-vercel-demo/src
       sudo chmod 666 /var/run/docker.sock
-      laraboot new test-app && cd test-app
+      laraboot new app && cd app
       cp ../laraboot.json .
 
       laraboot task add @core/laravel-config --format=file -vvv && \
