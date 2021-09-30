@@ -22,5 +22,5 @@ tasks:
       laraboot run --port=8080
 # Ports to expose on workspace startup
 ports:
-  - port: 8080
+  - port: 8000
     onOpen: open-preview
