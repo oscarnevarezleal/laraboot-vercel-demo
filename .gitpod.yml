@@ -11,6 +11,8 @@ tasks:
       laraboot new app && cd app
       cp ../laraboot.json .
 
+      laraboot config set config.app/name Demo -e APP_NAME -e APPNAME
+
       laraboot task add @core/laravel-config --format=file -vvv && \
       laraboot task add @core/laravel-model --format=file -vvv && \
       laraboot task add @core/laravel-model-views --format=file -vvv && \
