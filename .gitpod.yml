@@ -13,14 +13,14 @@ tasks:
 
       laraboot config set config.app/name Demo -e APP_NAME -e APPNAME
 
-      laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend -vvv
-
       laraboot task add @core/laravel-config --format=file -vvv && \
       laraboot task add @core/laravel-model --format=file -vvv && \
       laraboot task add @core/laravel-model-views --format=file -vvv && \
       laraboot task add @core/laravel-starterkit-buildpack --format=file -vvv && \
       laraboot task add @core/laraboot-packer --format=file -vvv && \
       laraboot task add @core/laraboot-hook-before-pack --format=file -vvv
+
+      laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend -vvv
 
       laraboot build --pack-params default-process=task -vvv
       laraboot run --port=8080
