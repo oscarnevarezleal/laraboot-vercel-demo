@@ -7,8 +7,8 @@ This project shows how to generate a Laravel application using Laraboot CLI.
 ## Features
 
 - [x] Use PHP 8
-- [x] Add custom configuration using `@core/laravel-config` task
-- [x] Create app models using `@core/laravel-model` task 
+- [x] Add custom configuration using [`@core/laravel-config`](https://github.com/laraboot-io/laravel-config-buildpack) task
+- [x] Create app models using [`@core/laravel-model`](https://github.com/laraboot-io/laravel-model-buildpack) task 
 - [x] Create vanilla views using `@core/laravel-model-views` task 
 - [x] Deploy to Vercel using Github actions
 - [x] Enable Gitpod integration
