@@ -55,14 +55,14 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
         run: |
 
-          readonly PROJECT_NAME="test-app"
+          readonly PROJECT_NAME="app-${PHP_VERSION}"
           readonly PROJECT_DESC="this"
           readonly PROJECT_VERSION="0.1"
 
           # Enable network communication with Docker socket.
           sudo chmod 666 /var/run/docker.sock
 
-          laraboot new "${PROJECT_NAME}" || exit 125
+          laraboot new "${PROJECT_NAME}" --php-version="${PHP_VERSION}.*" || exit 125
           cd $PROJECT_NAME
           cp ../src/laraboot.json .
           sudo chmod -R 777 .
@@ -86,7 +86,7 @@ jobs:
           ls -ltah .
 
           # Why test-app ?
-          image_id=$(docker run -id test-app)
+          image_id=$(docker run -id $PROJECT_NAME})
           docker cp $image_id:/layers/laraboot-buildpacks_laraboot-packer/laraboot/app.tar.gz app.tar.gz
           ls -ltah app.tar.gz
 
