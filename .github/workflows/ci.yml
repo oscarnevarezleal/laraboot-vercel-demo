@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ "7.4", "8.0" ]
+        php: [ "8.0" ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -65,6 +65,7 @@ jobs:
           laraboot new "${PROJECT_NAME}" --php-version="${PHP_VERSION}.*" || exit 125
           cd $PROJECT_NAME
           cp ../src/laraboot.json .
+          cp ../src/buildpack.yml .
           sudo chmod -R 777 .
 
           laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external && \

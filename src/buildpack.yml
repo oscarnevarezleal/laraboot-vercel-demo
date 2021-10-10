@@ -1,0 +1,8 @@
+laravel-starterkit:
+  jetstream:
+    enabled: true
+    teams: true
+    stack: react
+  breeze:
+    enabled: true
+    stack: vue
