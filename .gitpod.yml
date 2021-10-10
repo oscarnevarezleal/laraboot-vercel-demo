@@ -8,7 +8,7 @@ tasks:
       laraboot --version
       cd /workspace/laraboot-vercel-demo/src
       sudo chmod 666 /var/run/docker.sock
-      laraboot new app --php-version=8.0 && cd app
+      laraboot new app --php-version=8.0.* && cd app
       cp ../laraboot.json .
 
       laraboot config set config.app/name Demo -e APP_NAME -e APPNAME
