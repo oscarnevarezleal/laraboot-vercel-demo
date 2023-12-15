@@ -12,3 +12,5 @@ This project shows how to generate a Laravel application using Laraboot CLI.
 - [x] Create vanilla views using `@core/laravel-model-views` task 
 - [x] Deploy to Vercel using Github actions
 - [x] Enable Gitpod integration
+
+
